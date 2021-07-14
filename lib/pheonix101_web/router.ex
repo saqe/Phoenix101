@@ -18,7 +18,13 @@ defmodule Pheonix101Web.Router do
 
     get "/about", PageController, :about
     get "/wiki", PageController, :redirect_wiki
+
     get "/", PageController, :index
+  end
+
+  scope "/api", Pheonix101Web do
+    pipe_through :api
+    get "/", ApiController, :index
   end
 
   # Other scopes may use custom stacks.
