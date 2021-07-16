@@ -20,11 +20,15 @@ defmodule Pheonix101Web.Router do
     get "/wiki", PageController, :redirect_wiki
 
     get "/", PageController, :index
+
+    resources "/products", ProductController
   end
 
   scope "/api", Pheonix101Web do
     pipe_through :api
+
     get "/", ApiController, :index
+    resources "/products", ProductController
   end
 
   # Other scopes may use custom stacks.
@@ -39,12 +43,13 @@ defmodule Pheonix101Web.Router do
   # If your application does not have an admins-only section yet,
   # you can use Plug.BasicAuth to set up some basic authentication
   # as long as you are also using SSL (which you should anyway).
-  if Mix.env() in [:dev, :test] do
-    import Phoenix.LiveDashboard.Router
 
-    scope "/" do
-      pipe_through :browser
-      live_dashboard "/dashboard", metrics: Pheonix101Web.Telemetry
-    end
-  end
+  # if Mix.env() in [:dev, :test] do
+  #   import Phoenix.LiveDashboard.Router
+
+  #   scope "/" do
+  #     pipe_through :browser
+  #     live_dashboard "/dashboard", metrics: Pheonix101Web.Telemetry
+  #   end
+  # end
 end
