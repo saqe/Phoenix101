@@ -16,10 +16,10 @@ defmodule Pheonix101Web.Router do
   scope "/", Pheonix101Web do
     pipe_through :browser
 
+    get "/", PageController, :index
+
     get "/about", PageController, :about
     get "/wiki", PageController, :redirect_wiki
-
-    get "/", PageController, :index
 
     resources "/products", ProductController
   end
@@ -27,7 +27,9 @@ defmodule Pheonix101Web.Router do
   scope "/api", Pheonix101Web do
     pipe_through :api
 
+    # Info Route about api
     get "/", ApiController, :index
+
     resources "/products", ProductApiController, except: [:new, :edit]
     resources "/orders", OrderController, except: [:new, :edit]
   end
