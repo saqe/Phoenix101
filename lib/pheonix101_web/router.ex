@@ -30,7 +30,7 @@ defmodule Pheonix101Web.Router do
     # Info Route about api
     get "/", ApiController, :index
 
-    resources "/products", ProductApiController, except: [:new, :edit]
+    resources "/products", ProductAPIController, except: [:new, :edit]
     resources "/orders", OrderController, except: [:new, :edit]
   end
 

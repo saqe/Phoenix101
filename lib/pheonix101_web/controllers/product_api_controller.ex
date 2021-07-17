@@ -1,19 +1,21 @@
-defmodule Pheonix101Web.ProductApiController do
+defmodule Pheonix101Web.ProductAPIController do
   use Pheonix101Web, :controller
+
   alias Pheonix101.Inventory
   alias Pheonix101.Inventory.Product
 
   action_fallback Pheonix101Web.FallbackController
 
+  @spec index(Plug.Conn.t(), map) :: Plug.Conn.t()
   def index(conn, _params) do
-    products = Inventory.list_products() |> IO.inspect()
+    products = Inventory.list_products()
 
     conn
     |> render("index.json", products: products)
   end
 
-  @spec create(any, map) :: any
-  def create(conn, %{"product" => product_params}) do
+  @spec create(any, map) :: Plug.Conn.t()
+  def create(conn, %{} = product_params) do
     with {:ok, %Product{} = product} <- Inventory.create_product(product_params) do
       conn
       |> put_status(:created)
@@ -22,11 +24,13 @@ defmodule Pheonix101Web.ProductApiController do
     end
   end
 
+  @spec show(Plug.Conn.t(), map) :: Plug.Conn.t()
   def show(conn, %{"id" => id}) do
     product = Inventory.get_product!(id)
     render(conn, "show.json", product: product)
   end
 
+  @spec update(any, map) :: Plug.Conn.t()
   def update(conn, %{"id" => id, "product" => product_params}) do
     product = Inventory.get_product!(id)
 
@@ -35,15 +39,14 @@ defmodule Pheonix101Web.ProductApiController do
     end
   end
 
+  @spec delete(any, map) :: Plug.Conn.t()
   def delete(conn, %{"id" => id}) do
     product = Inventory.get_product!(id)
 
     with {:ok, %Product{}} <- Inventory.delete_product(product) do
       conn
       |> put_status(:delete)
-      |> render("delete.json")
-
-      # |> send_resp(:no_content, "")
+      |> render("delete.json", :deleted)
     end
   end
 end
