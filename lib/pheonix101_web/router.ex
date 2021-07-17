@@ -28,7 +28,8 @@ defmodule Pheonix101Web.Router do
     pipe_through :api
 
     get "/", ApiController, :index
-    resources "/products", ProductController
+    resources "/products", ProductApiController, except: [:new, :edit]
+    resources "/orders", OrderController, except: [:new, :edit]
   end
 
   # Other scopes may use custom stacks.
