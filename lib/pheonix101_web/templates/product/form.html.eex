@@ -13,7 +13,5 @@
   <%= number_input f, :price, step: "any"%>
   <%= error_tag f, :price %>
 
-  <div>
-    <%= submit "Save" %>
-  </div>
+  <input type="submit" value="Save">
 <% end %>

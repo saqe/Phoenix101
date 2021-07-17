@@ -11,8 +11,6 @@ defmodule Pheonix101Web.OrderView do
   end
 
   def render("order.json", %{order: order}) do
-    %{id: order.id,
-      product_name: order.product_name,
-      price: order.price}
+    %{id: order.id, product_name: order.product_name, price: order.price}
   end
 end

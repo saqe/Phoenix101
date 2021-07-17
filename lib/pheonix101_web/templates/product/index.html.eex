@@ -16,19 +16,20 @@
       <td><%= product.price %> $</td>
 
       <td>
-        <%= link "Show",
+        <%= link " Show",
             to: Routes.product_path(@conn, :show, product),
-            class: "btn btn-primary" %>
+            class: "btn btn-primary bi bi-eye-fill" %>
 
-        <%= link "Edit",
-            class: "btn btn-dark",
+        <%= link " Edit",
+            class: "btn btn-dark bi bi-pencil",
             to: Routes.product_path(@conn, :edit, product)%>
 
-        <%= link "Delete",
-            class: "btn btn-danger",
-            to: Routes.product_path(@conn, :delete, product),
-            method: :delete,
-            data: [confirm: "Are you sure?"] %>
+        <%= link "",
+          class: "btn btn-danger bi bi-trash",
+          to: Routes.product_path(@conn, :delete, product),
+          method: :delete,
+          data: [confirm: "Are you sure?"] %>
+
       </td>
     </tr>
 <% end %>
