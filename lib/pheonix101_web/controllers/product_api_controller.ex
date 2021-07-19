@@ -36,16 +36,19 @@ defmodule Pheonix101Web.ProductAPIController do
     render(conn, "index.json", products: products)
   end
 
+  # Query all of the products that are updated today
   def query(conn, %{"updated" => "today"}) do
     products = Inventory.updated_today()
     render(conn, "index.json", products: products)
   end
 
+  # Query product by title
   def query(conn, %{"title" => title}) do
     products = Inventory.get_product_by_title(title)
     render(conn, "index.json", products: products)
   end
 
+  # A generic query for pattern matching
   def query(conn, %{} = params) do
     json(
       conn,
