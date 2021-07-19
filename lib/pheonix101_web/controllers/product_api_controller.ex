@@ -30,6 +30,33 @@ defmodule Pheonix101Web.ProductAPIController do
     render(conn, "show.json", product: product)
   end
 
+  def show_updated_today(conn, params) do
+    IO.inspect(params)
+    products = Inventory.updated_today()
+    render(conn, "index.json", products: products)
+  end
+
+  def query(conn, %{"updated" => "today"}) do
+    products = Inventory.updated_today()
+    render(conn, "index.json", products: products)
+  end
+
+  def query(conn, %{"title" => title}) do
+    products = Inventory.get_product_by_title(title)
+    render(conn, "index.json", products: products)
+  end
+
+  def query(conn, %{} = params) do
+    json(
+      conn,
+      %{
+        status: 200,
+        message: "Query is working fine, but no query pattern were matched",
+        params: params
+      }
+    )
+  end
+
   @spec update(any, map) :: Plug.Conn.t()
   def update(conn, %{"id" => id, "product" => product_params}) do
     product = Inventory.get_product!(id)
