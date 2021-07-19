@@ -14,7 +14,9 @@ database_url =
 config :pheonix101, Pheonix101.Repo,
   # ssl: true,
   url: database_url,
-  pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10")
+  ssl: true,
+  size: 20,
+  pool_size: String.to_integer(System.get_env("POOL_SIZE") || "20")
 
 secret_key_base =
   System.get_env("SECRET_KEY_BASE") ||
