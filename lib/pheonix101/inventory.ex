@@ -21,6 +21,25 @@ defmodule Pheonix101.Inventory do
     Repo.all(Product)
   end
 
+  def updated_today() do
+    # from p in "products",
+    #   where: fragment(" DATE(?) = CURRENT_DATE", p.updated_at)
+
+    from(p in Product,
+      where: fragment("DATE(?) = CURRENT_DATE", p.updated_at)
+    )
+    |> Repo.all()
+  end
+
+  @spec get_product_by_title(String.t()) :: list(struct())
+  def get_product_by_title(title) do
+    from(
+      p in Product,
+      where: p.title == ^title
+    )
+    |> Repo.all()
+  end
+
   @spec get_product!(integer()) :: any
   @doc """
   Gets a single product.
