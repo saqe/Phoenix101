@@ -22,6 +22,7 @@ defmodule Pheonix101Web.Router do
     get "/wiki", PageController, :redirect_wiki
 
     resources "/products", ProductController
+    resources "/users", UserController
   end
 
   scope "/api", Pheonix101Web do
@@ -37,8 +38,6 @@ defmodule Pheonix101Web.Router do
 
       resources "/", ProductAPIController, except: [:new, :edit]
     end
-
-    resources "/orders", OrderController, except: [:new, :edit]
   end
 
   # Other scopes may use custom stacks.
