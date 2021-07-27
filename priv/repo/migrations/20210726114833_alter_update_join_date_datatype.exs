@@ -3,7 +3,7 @@ defmodule Pheonix101.Repo.Migrations.AlterUpdateJoinDateDatatype do
 
   def change do
     alter table("products") do
-      add :managed_by, references(:users)
+      add :user, references(:users)
     end
   end
 end
