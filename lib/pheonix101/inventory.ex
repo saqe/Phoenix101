@@ -18,7 +18,9 @@ defmodule Pheonix101.Inventory do
 
   """
   def list_products do
-    Repo.all(Product)
+    Product
+    |> Repo.all()
+    |> Repo.preload(:user)
   end
 
   def updated_today() do

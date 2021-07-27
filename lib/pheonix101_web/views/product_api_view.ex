@@ -12,7 +12,12 @@ defmodule Pheonix101Web.ProductAPIView do
   end
 
   def render("product.json", %{product: product}) do
-    %{id: product.id, title: product.title, price: product.price}
+    %{
+      id: product.id,
+      title: product.title,
+      price: product.price,
+      managed_by: product.user
+    }
   end
 
   # Just to catch and forward request for product path
@@ -20,6 +25,9 @@ defmodule Pheonix101Web.ProductAPIView do
     do: render("product.json", %{product: product})
 
   def render("delete.json", _) do
-    %{status: 204, message: "The product has been successfuly deleted"}
+    %{
+      status: 204,
+      message: "The product has been successfuly deleted"
+    }
   end
 end
