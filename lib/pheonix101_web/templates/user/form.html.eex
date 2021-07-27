@@ -14,14 +14,12 @@
   <%= error_tag f, :title %>
 
   <%= label f, :dob %>
-  <%= date_select f, :dob %>
+  <%= date_select f, :dob, year: [options: 1965..2004]  %>
   <%= error_tag f, :dob %>
 
   <%= label f, :join_date %>
-  <%= date_select f, :join_date %>
+  <%= date_select f, :join_date, year: [options: 2000..2021] %>
   <%= error_tag f, :join_date %>
 
-  <div>
-    <%= submit "Save" %>
-  </div>
+  <div> <%= submit "Save" %> </div>
 <% end %>
