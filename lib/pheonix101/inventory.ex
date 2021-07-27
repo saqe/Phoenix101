@@ -31,6 +31,7 @@ defmodule Pheonix101.Inventory do
       where: fragment("DATE(?) = CURRENT_DATE", p.updated_at)
     )
     |> Repo.all()
+    |> Repo.preload(:user)
   end
 
   @spec get_product_by_title(String.t()) :: list(struct())
@@ -40,6 +41,7 @@ defmodule Pheonix101.Inventory do
       where: p.title == ^title
     )
     |> Repo.all()
+    |> Repo.preload(:user)
   end
 
   @spec get_product!(integer()) :: any
@@ -56,7 +58,7 @@ defmodule Pheonix101.Inventory do
       iex> get_product!(456)
       ** (Ecto.NoResultsError)
   """
-  def get_product!(id), do: Repo.get!(Product, id)
+  def get_product!(id), do: Repo.get!(Product, id) |> Repo.preload(:user)
 
   @doc """
   Creates a product.
@@ -74,6 +76,7 @@ defmodule Pheonix101.Inventory do
     %Product{}
     |> Product.changeset(attrs)
     |> Repo.insert()
+    |> Repo.preload(:user)
   end
 
   @doc """
