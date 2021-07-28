@@ -1,7 +1,7 @@
 defmodule Pheonix101Web.ProductAPIView do
   use Pheonix101Web, :view
   alias Pheonix101Web.ProductAPIView
-  alias Pheonix101Web.UserView
+  alias Pheonix101Web.UserAPIView
   alias Pheonix101.Accounts.User
 
   def render("index.json", %{products: products}),
@@ -15,7 +15,7 @@ defmodule Pheonix101Web.ProductAPIView do
       id: product.id,
       title: product.title,
       price: product.price,
-      managed_by: render_one(product.user, UserView, "user_manager.json")
+      managed_by: render_one(product.user, UserAPIView, "user_manager.json")
     }
   end
 
