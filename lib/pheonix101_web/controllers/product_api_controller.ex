@@ -37,6 +37,7 @@ defmodule Pheonix101Web.ProductAPIController do
   end
 
   # Query all of the products that are updated today
+  @spec query(Plug.Conn.t(), map) :: Plug.Conn.t()
   def query(conn, %{"updated" => "today"}) do
     products = Inventory.updated_today()
     render(conn, "index.json", products: products)
