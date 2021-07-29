@@ -28,15 +28,9 @@ defmodule Pheonix101Web.OrderApiController do
     }
 
     with {:ok, %Order{} = order} <- Orders.create_order(order_params) do
-      IO.inspect("=====[order]======")
-      IO.inspect(order)
-      IO.inspect("=====[order]======")
-
       cart = Enum.map(cart, &Map.put(&1, "order_id", order.id))
 
-      with {:ok, _message} <- Orders.create_invoices(cart) do
-        IO.inspect(_message)
-
+      with {:ok} <- Orders.create_invoices(cart) do
         conn
         |> put_status(:created)
         |> put_resp_header("location", Routes.order_path(conn, :show, order))
