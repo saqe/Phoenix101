@@ -11,18 +11,24 @@ defmodule Pheonix101Web.CustomerApiController do
     render(conn, "index.json", customers: customers, view: CustomerView)
   end
 
+  @spec create(Plug.Conn.t(), map) :: any
   def create(conn, %{"customer" => customer_params}) do
     with {:ok, %Customer{} = customer} <- Orders.create_customer(customer_params) do
       conn
       |> put_status(:created)
       |> put_resp_header("location", Routes.customer_path(conn, :show, customer))
-      |> render("show.json", customer: customer, view: CustomerView)
+      |> render("show.json", customer: customer, view: CustomerApiView)
     end
   end
 
   def show(conn, %{"id" => id}) do
     customer = Orders.get_customer!(id)
     render(conn, "show.json", customer: customer)
+  end
+
+  def orders_by_customer(conn, %{"customer_api_id" => customer_id}) do
+    orders = Orders.orders_by_customer(customer_id)
+    render(conn, "show.json", orders: orders, view: CustomerApiView)
   end
 
   def update(conn, %{"id" => id, "customer" => customer_params}) do

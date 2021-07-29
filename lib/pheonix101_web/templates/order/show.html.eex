@@ -1,0 +1,10 @@
+<h1>Show Order</h1>
+
+<ul>
+  <li> <strong>Customer ID:</strong> <%= @order.amount %> </li>
+  <li> <strong>Amount:</strong>      <%= @order.amount %> </li>
+  <li> <strong>Status:</strong>      <%= @order.status %> </li>
+</ul>
+
+<span><%= link "Edit", to: Routes.order_path(@conn, :edit, @order) %></span>
+<span><%= link "Back", to: Routes.order_path(@conn, :index) %></span>

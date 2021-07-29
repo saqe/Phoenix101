@@ -23,6 +23,7 @@ defmodule Pheonix101Web.Router do
 
     resources "/products", ProductController
     resources "/customers", CustomerController
+    resources "/orders", OrderController
     resources "/users", UserController
   end
 
@@ -40,7 +41,9 @@ defmodule Pheonix101Web.Router do
       resources "/", ProductAPIController, except: [:new, :edit]
     end
 
-    resources "/customers", CustomerApiController, except: [:new, :edit]
+    resources "/customers", CustomerApiController, except: [:new, :edit] do
+      get "/orders", CustomerApiController, :orders_by_customer
+    end
   end
 
   # Other scopes may use custom stacks.

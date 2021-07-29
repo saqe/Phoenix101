@@ -2,7 +2,6 @@ defmodule Pheonix101Web.ProductAPIView do
   use Pheonix101Web, :view
   alias Pheonix101Web.ProductAPIView
   alias Pheonix101Web.UserAPIView
-  alias Pheonix101.Accounts.User
 
   def render("index.json", %{products: products}),
     do: %{data: render_many(products, ProductAPIView, "product.json", as: :product)}
