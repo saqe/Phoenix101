@@ -27,8 +27,12 @@ defmodule Pheonix101Web.CustomerApiController do
   end
 
   def orders_by_customer(conn, %{"customer_api_id" => customer_id}) do
-    orders = Orders.orders_by_customer(customer_id)
-    render(conn, "show.json", orders: orders, view: CustomerApiView)
+    data = Orders.orders_by_customer(customer_id)
+
+    render(conn, "show_orders.json",
+      orders: data,
+      view: CustomerApiView
+    )
   end
 
   def update(conn, %{"id" => id, "customer" => customer_params}) do

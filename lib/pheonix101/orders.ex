@@ -21,12 +21,20 @@ defmodule Pheonix101.Orders do
     Repo.all(Customer)
   end
 
-  @spec orders_by_customer(integer()) :: any
+  @spec orders_by_customer(integer) :: any
   def orders_by_customer(customer_id) do
-    Repo.all(
-      from o in Order,
-        where: o.customer_id == ^customer_id
-    )
+    orders =
+      Repo.all(
+        from o in Order,
+          where: o.customer_id == ^customer_id
+      )
+
+    customer = get_customer!(customer_id)
+
+    %{
+      orders: orders,
+      customer: customer
+    }
   end
 
   @doc """
