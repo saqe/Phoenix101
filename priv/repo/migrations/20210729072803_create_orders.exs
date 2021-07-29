@@ -9,5 +9,7 @@ defmodule Pheonix101.Repo.Migrations.CreateOrders do
 
       timestamps()
     end
+
+    create index(:orders, [:customer_id])
   end
 end

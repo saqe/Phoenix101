@@ -41,7 +41,10 @@ defmodule Pheonix101Web.Router do
       resources "/", ProductAPIController, except: [:new, :edit]
     end
 
-    resources "/orders", OrderApiController, except: [:new, :edit]
+    scope "/orders" do
+      post "/send_order", OrderApiController, :send_order
+      resources "/", OrderApiController, except: [:new, :edit]
+    end
 
     resources "/customers", CustomerApiController, except: [:new, :edit] do
       get "/orders", CustomerApiController, :orders_by_customer

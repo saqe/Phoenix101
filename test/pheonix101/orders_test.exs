@@ -132,4 +132,65 @@ defmodule Pheonix101.OrdersTest do
       assert %Ecto.Changeset{} = Orders.change_order(order)
     end
   end
+
+  describe "invoices" do
+    alias Pheonix101.Orders.Invoice
+
+    @valid_attrs %{price: 120.5, quantity: 42}
+    @update_attrs %{price: 456.7, quantity: 43}
+    @invalid_attrs %{price: nil, quantity: nil}
+
+    def invoice_fixture(attrs \\ %{}) do
+      {:ok, invoice} =
+        attrs
+        |> Enum.into(@valid_attrs)
+        |> Orders.create_invoice()
+
+      invoice
+    end
+
+    test "list_invoices/0 returns all invoices" do
+      invoice = invoice_fixture()
+      assert Orders.list_invoices() == [invoice]
+    end
+
+    test "get_invoice!/1 returns the invoice with given id" do
+      invoice = invoice_fixture()
+      assert Orders.get_invoice!(invoice.id) == invoice
+    end
+
+    test "create_invoice/1 with valid data creates a invoice" do
+      assert {:ok, %Invoice{} = invoice} = Orders.create_invoice(@valid_attrs)
+      assert invoice.price == 120.5
+      assert invoice.quantity == 42
+    end
+
+    test "create_invoice/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Orders.create_invoice(@invalid_attrs)
+    end
+
+    test "update_invoice/2 with valid data updates the invoice" do
+      invoice = invoice_fixture()
+      assert {:ok, %Invoice{} = invoice} = Orders.update_invoice(invoice, @update_attrs)
+      assert invoice.price == 456.7
+      assert invoice.quantity == 43
+    end
+
+    test "update_invoice/2 with invalid data returns error changeset" do
+      invoice = invoice_fixture()
+      assert {:error, %Ecto.Changeset{}} = Orders.update_invoice(invoice, @invalid_attrs)
+      assert invoice == Orders.get_invoice!(invoice.id)
+    end
+
+    test "delete_invoice/1 deletes the invoice" do
+      invoice = invoice_fixture()
+      assert {:ok, %Invoice{}} = Orders.delete_invoice(invoice)
+      assert_raise Ecto.NoResultsError, fn -> Orders.get_invoice!(invoice.id) end
+    end
+
+    test "change_invoice/1 returns a invoice changeset" do
+      invoice = invoice_fixture()
+      assert %Ecto.Changeset{} = Orders.change_invoice(invoice)
+    end
+  end
 end
