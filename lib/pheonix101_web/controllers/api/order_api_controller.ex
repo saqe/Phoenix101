@@ -3,7 +3,6 @@ defmodule Pheonix101Web.OrderApiController do
 
   alias Pheonix101.Orders
   alias Pheonix101.Orders.Order
-  alias Pheonix101.Orders.Invoice
 
   action_fallback(Pheonix101Web.FallbackController)
 
