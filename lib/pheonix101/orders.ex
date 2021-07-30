@@ -235,6 +235,10 @@ defmodule Pheonix101.Orders do
     |> IO.inspect(label: "Order # #{order_id} with amount")
   end
 
+  @doc """
+    Update the amount of an order by accumulating all of the prices
+    of product * quantity in the cart of that order.
+  """
   @spec update_order_amount!(integer()) :: :ok
   def update_order_amount!(order_id) do
     amount = get_order_amount!(order_id)
@@ -246,6 +250,8 @@ defmodule Pheonix101.Orders do
     )
     |> Repo.update_all([])
 
+    # Single update wasn't working. But in debug query is fine.
+    # Other way can be: Write a RAW form of SQL query and update record.
     :ok
   end
 
@@ -284,38 +290,38 @@ defmodule Pheonix101.Orders do
 
   ## Examples
 
-      iex> create_invoice(%{field: value})
+      iex> create_invoice!(%{field: value})
       {:ok, %Invoice{}}
 
-      iex> create_invoice(%{field: bad_value})
+      iex> create_invoice!(%{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
   def create_invoice(attrs \\ %{}) do
     %Invoice{}
-    |> Invoice.changeset(attrs)
+    |> Invoice.changeset_verify_product_id(attrs)
+    |> IO.inspect()
     |> Repo.insert()
   end
 
-  @spec create_invoices(any) :: :ok
   def create_invoices(invoices) do
     Enum.each(
       invoices,
-      &(%Invoice{} |> Invoice.changeset(&1) |> Repo.insert!())
+      &create_invoice(&1)
     )
   end
 
-  def create_invoices_(invoices) do
-    # TODO: Refactor that code.
-    invoices =
-      Enum.map(
-        invoices,
-        &(%Invoice{} |> Invoice.changeset(&1))
-      )
-      |> IO.inspect()
+  # def _create_invoices(invoices) do
+  #   # TODO: Refactor that code.
+  #   invoices =
+  #     Enum.map(
+  #       invoices,
+  #       &(%Invoice{} |> Invoice.changeset(&1))
+  #     )
+  #     |> IO.inspect()
 
-    Repo.insert_all(Invoice, invoices)
-  end
+  #   Repo.insert_all(Invoice, invoices)
+  # end
 
   @doc """
   Updates a invoice.

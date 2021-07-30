@@ -20,6 +20,10 @@ defmodule Pheonix101Web.OrderApiController do
     end
   end
 
+  # Problems with this functions
+  # -> If product_ids are wrong order will still be created.
+  # -> Invoices will be create in series.
+  #  --> if one of the invoice is invalid. changeset will break and exisiting invoices will stay.
   def send_order(conn, %{"customer_id" => customer_id, "cart" => cart}) do
     order_params = %{
       customer_id: customer_id,
@@ -28,22 +32,30 @@ defmodule Pheonix101Web.OrderApiController do
 
     # [TODO] [ERROR] verify product_id.
     # Right now orders are created having errors with invoices.
-    with {:ok, %Order{} = order} <- Orders.create_order(order_params) do
-      # Map order_id with all of the invoices created.
-      cart = Enum.map(cart, &Map.put(&1, "order_id", order.id))
 
-      # [ERROR] Having errors with create_all_invoices
-      with :ok <- Orders.create_invoices(cart) do
-        # Update order amount by calculating it from invoices..
-        Orders.update_order_amount!(order.id)
+    # Map order_id with all of the invoices created.
+    # [ERROR] Having errors with create_all_invoices
+    with {:ok, %Order{} = order} <- Orders.create_order(order_params),
+         {:ok} <-
+           cart |> Enum.map(&Map.put(&1, "order_id", order.id)) |> Orders.create_invoices() do
+      # Update order amount by calculating it from invoices..
+      Orders.update_order_amount!(order.id)
 
-        conn
-        |> put_status(:created)
-        |> put_resp_header("location", Routes.order_path(conn, :show, order))
-        |> show(%{"id" => order.id})
+      conn
+      |> put_status(:created)
+      |> put_resp_header("location", Routes.order_path(conn, :show, order))
+      |> show(%{"id" => order.id})
 
-        # Review required here with show orders.
-      end
+      # Review required here with show orders.
+      # Can we preload put_resp_header
+    else
+      {:error, error} ->
+        IO.puts("There is an error")
+        IO.inspect(error)
+        :error
+
+      param ->
+        IO.puts(param)
     end
   end
 
