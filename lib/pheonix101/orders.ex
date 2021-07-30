@@ -265,11 +265,6 @@ defmodule Pheonix101.Orders do
 
   @spec create_invoices(any) :: :ok
   def create_invoices(invoices) do
-    # Repo.insert_all(
-    #   Invoice,
-    #   invoices
-    # )
-
     Enum.each(
       invoices,
       &(%Invoice{} |> Invoice.changeset(&1) |> Repo.insert!())

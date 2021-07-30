@@ -30,7 +30,7 @@ defmodule Pheonix101Web.OrderApiController do
     with {:ok, %Order{} = order} <- Orders.create_order(order_params) do
       cart = Enum.map(cart, &Map.put(&1, "order_id", order.id))
 
-      with {:ok} <- Orders.create_invoices(cart) do
+      with :ok <- Orders.create_invoices(cart) do
         conn
         |> put_status(:created)
         |> put_resp_header("location", Routes.order_path(conn, :show, order))
