@@ -151,9 +151,7 @@ defmodule Pheonix101.Orders do
   def get_order!(id) do
     Order
     |> Repo.get!(id)
-    |> IO.inspect()
     |> Repo.preload(invoices: :product, customer: [])
-    |> IO.inspect()
   end
 
   @doc """
@@ -221,17 +219,37 @@ defmodule Pheonix101.Orders do
     Order.changeset(order, attrs)
   end
 
-  def get_order_amount!(order_id) do
-    Repo.one!(
-      from i in Invoice,
-        join: p in assoc(i, :product),
-        where: i.order_id == ^order_id,
-        select: fragment("ROUND(cast(sum(?) as numeric),2)", p.price)
-    )
-    |> Decimal.to_float()
-    |> IO.inspect()
+  @spec query_order_amount(any) :: Ecto.Query.t()
+  defp query_order_amount(order_id) do
+    from i in Invoice,
+      join: p in assoc(i, :product),
+      where: i.order_id == ^order_id,
+      select: fragment("ROUND(cast(sum(?) as numeric),2)", p.price)
   end
 
+  @spec get_order_amount!(any) :: any
+  defp get_order_amount!(order_id) do
+    query_order_amount(order_id)
+    |> Repo.one!()
+    |> Decimal.to_float()
+    |> IO.inspect(label: "Order # #{order_id} with amount")
+  end
+
+  @spec update_order_amount!(integer()) :: :ok
+  def update_order_amount!(order_id) do
+    amount = get_order_amount!(order_id)
+
+    from(
+      order in Order,
+      where: order.id == ^order_id,
+      update: [set: [amount: ^amount]]
+    )
+    |> Repo.update_all([])
+
+    :ok
+  end
+
+  @spec list_invoices :: any
   @doc """
   Returns the list of invoices.
 
@@ -261,10 +279,6 @@ defmodule Pheonix101.Orders do
   """
   def get_invoice!(id), do: Repo.get!(Invoice, id)
 
-  def get_order_details(_id) do
-    # Repo.one!(from(i in Invoice))
-  end
-
   @doc """
   Creates a invoice.
 
@@ -289,6 +303,18 @@ defmodule Pheonix101.Orders do
       invoices,
       &(%Invoice{} |> Invoice.changeset(&1) |> Repo.insert!())
     )
+  end
+
+  def create_invoices_(invoices) do
+    # TODO: Refactor that code.
+    invoices =
+      Enum.map(
+        invoices,
+        &(%Invoice{} |> Invoice.changeset(&1))
+      )
+      |> IO.inspect()
+
+    Repo.insert_all(Invoice, invoices)
   end
 
   @doc """

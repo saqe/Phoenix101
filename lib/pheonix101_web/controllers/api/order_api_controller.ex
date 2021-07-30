@@ -26,14 +26,23 @@ defmodule Pheonix101Web.OrderApiController do
       status: Order.default_status()
     }
 
+    # [TODO] [ERROR] verify product_id.
+    # Right now orders are created having errors with invoices.
     with {:ok, %Order{} = order} <- Orders.create_order(order_params) do
+      # Map order_id with all of the invoices created.
       cart = Enum.map(cart, &Map.put(&1, "order_id", order.id))
 
+      # [ERROR] Having errors with create_all_invoices
       with :ok <- Orders.create_invoices(cart) do
+        # Update order amount by calculating it from invoices..
+        Orders.update_order_amount!(order.id)
+
         conn
         |> put_status(:created)
         |> put_resp_header("location", Routes.order_path(conn, :show, order))
-        |> render("show.json", order: order)
+        |> show(%{"id" => order.id})
+
+        # Review required here with show orders.
       end
     end
   end
