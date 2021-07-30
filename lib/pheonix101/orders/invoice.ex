@@ -1,11 +1,13 @@
 defmodule Pheonix101.Orders.Invoice do
   use Ecto.Schema
   import Ecto.Changeset
+  alias Pheonix101.Orders.Order
+  alias Pheonix101.Inventory.Product
 
   schema "invoices" do
     field :quantity, :integer
-    field :order_id, :id
-    field :product_id, :id
+    belongs_to :order, Order
+    belongs_to :product, Product
   end
 
   @doc false
