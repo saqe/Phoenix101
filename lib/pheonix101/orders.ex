@@ -7,6 +7,7 @@ defmodule Pheonix101.Orders do
   alias Pheonix101.Repo
   alias Pheonix101.Orders.Order
   alias Pheonix101.Orders.Customer
+  alias Pheonix101.Orders.Invoice
 
   @doc """
   Returns the list of customers.
@@ -147,7 +148,13 @@ defmodule Pheonix101.Orders do
       ** (Ecto.NoResultsError)
 
   """
-  def get_order!(id), do: Repo.get!(Order, id)
+  def get_order!(id) do
+    Order
+    |> Repo.get!(id)
+    |> IO.inspect()
+    |> Repo.preload(invoices: :product, customer: [])
+    |> IO.inspect()
+  end
 
   @doc """
   Creates a order.
@@ -214,7 +221,16 @@ defmodule Pheonix101.Orders do
     Order.changeset(order, attrs)
   end
 
-  alias Pheonix101.Orders.Invoice
+  def get_order_amount!(order_id) do
+    Repo.one!(
+      from i in Invoice,
+        join: p in assoc(i, :product),
+        where: i.order_id == ^order_id,
+        select: fragment("ROUND(cast(sum(?) as numeric),2)", p.price)
+    )
+    |> Decimal.to_float()
+    |> IO.inspect()
+  end
 
   @doc """
   Returns the list of invoices.
@@ -244,6 +260,10 @@ defmodule Pheonix101.Orders do
 
   """
   def get_invoice!(id), do: Repo.get!(Invoice, id)
+
+  def get_order_details(_id) do
+    # Repo.one!(from(i in Invoice))
+  end
 
   @doc """
   Creates a invoice.
