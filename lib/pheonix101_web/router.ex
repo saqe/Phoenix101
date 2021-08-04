@@ -13,6 +13,14 @@ defmodule Pheonix101Web.Router do
     plug :accepts, ["json"]
   end
 
+  pipeline :graphql do
+    # plug :accepts, ["json"]
+    plug Plug.Parsers,
+      parsers: [:urlencoded, :multipart, :json, Absinthe.Plug.Parser],
+      pass: ["*/*"],
+      json_decoder: Jason
+  end
+
   scope "/", Pheonix101Web do
     pipe_through :browser
 
@@ -25,6 +33,18 @@ defmodule Pheonix101Web.Router do
     resources "/customers", CustomerController
     resources "/orders", OrderController
     resources "/users", UserController
+  end
+
+  scope "/" do
+    pipe_through :graphql
+
+    forward "/graphql", Absinthe.Plug, schema: Pheonix101.Schema
+
+    if Mix.env() == :dev do
+      forward "/graphiql",
+              Absinthe.Plug.GraphiQL,
+              schema: Pheonix101.Schema
+    end
   end
 
   scope "/api", Pheonix101Web do
