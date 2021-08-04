@@ -1,6 +1,5 @@
 defmodule Pheonix101Web.UserAPIView do
   use Pheonix101Web, :view
-  alias Pheonix101Web.UserAPIView
 
   def render("user.json", %{user: user}) do
     %{
