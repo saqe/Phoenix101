@@ -40,11 +40,9 @@ defmodule Pheonix101Web.Router do
 
     forward "/graphql", Absinthe.Plug, schema: Pheonix101.Schema
 
-    if Mix.env() == :dev do
-      forward "/graphiql",
-              Absinthe.Plug.GraphiQL,
-              schema: Pheonix101.Schema
-    end
+    forward "/graphiql",
+            Absinthe.Plug.GraphiQL,
+            schema: Pheonix101.Schema
   end
 
   scope "/api", Pheonix101Web do
