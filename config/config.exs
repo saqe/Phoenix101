@@ -13,6 +13,7 @@ config :pheonix101,
 # Configures the endpoint
 config :pheonix101, Pheonix101Web.Endpoint,
   url: [host: "localhost"],
+  # Hide the secret_key part of your app. That was mentioned so you can run the app easily in first go without error.
   secret_key_base: "MpC3ovyzYPiOD7K7DPWgLH4r/3yMv+6ZqaSledHnMptdKgN1T93iht0yWcCxx56L",
   render_errors: [view: Pheonix101Web.ErrorView, accepts: ~w(html json), layout: false],
   pubsub_server: Pheonix101.PubSub,
